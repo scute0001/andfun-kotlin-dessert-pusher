@@ -30,7 +30,10 @@ import com.example.android.dessertpusher.databinding.ActivityMainBinding
 import timber.log.Timber
 import java.util.ArrayList
 
-const val KEY_SAVEDATA = "key_saveOnCrash"
+/** onSaveInstanceState Bundle Keys **/
+const val KEY_REVENUE = "revenue_key"
+const val KEY_DESSERT_SOLD = "dessert_sold_key"
+const val KEY_TIMER_SECONDS = "timer_seconds_key"
 
 class MainActivity : AppCompatActivity(), LifecycleObserver {
 
@@ -86,10 +89,12 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
         // three values you saved and restore them: revenue, desserts sold and the timer's
         // seconds count. Also make sure to show the correct image resource.
         if (savedInstanceState != null) {
-            val reStoreData: ArrayList<Int> = savedInstanceState.getIntegerArrayList(KEY_SAVEDATA) as ArrayList<Int>
-            revenue = reStoreData.get(0)
-            dessertsSold = reStoreData.get(1)
-            dessertTimer.secondsCount = reStoreData.get(2)
+            // Get all the game state information from the bundle, set it
+            revenue = savedInstanceState.getInt(KEY_REVENUE, 0)
+            dessertsSold = savedInstanceState.getInt(KEY_DESSERT_SOLD, 0)
+            dessertTimer.secondsCount = savedInstanceState.getInt(KEY_TIMER_SECONDS, 0)
+            showCurrentDessert()
+
         }
 
         // Set the TextViews to the right values
@@ -169,7 +174,7 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
 
     // TODO (01) Add lifecycle callback methods for onSaveInstanceState and onRestoreInstanceState
 
-    override fun onSaveInstanceState(outState: Bundle) {
+/*    override fun onSaveInstanceState(outState: Bundle) {
         // TODO (02) In onSaveInstanceState, put the revenue, dessertsSold and
         // dessertTimer.secondsCount in the state Bundle
 
@@ -177,6 +182,15 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
         var saveList = arrayListOf<Int>(revenue, dessertsSold, dessertTimer.secondsCount)
         outState.putIntegerArrayList(KEY_SAVEDATA, saveList)
 
+        super.onSaveInstanceState(outState)
+    }*/
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(KEY_REVENUE, revenue)
+        outState.putInt(KEY_DESSERT_SOLD, dessertsSold)
+        outState.putInt(KEY_TIMER_SECONDS, dessertTimer.secondsCount)
+        Timber.i("onSaveInstanceState Called")
         super.onSaveInstanceState(outState)
     }
 

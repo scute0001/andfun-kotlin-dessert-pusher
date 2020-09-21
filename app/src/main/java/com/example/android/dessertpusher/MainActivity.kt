@@ -18,6 +18,7 @@ package com.example.android.dessertpusher
 
 import android.content.ActivityNotFoundException
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -27,6 +28,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleObserver
 import com.example.android.dessertpusher.databinding.ActivityMainBinding
 import timber.log.Timber
+import java.util.ArrayList
+
+const val KEY_SAVEDATA = "key_saveOnCrash"
 
 class MainActivity : AppCompatActivity(), LifecycleObserver {
 
@@ -81,6 +85,12 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
         // TODO (03) Check here if the Bundle savedInstanceState is null. If it isn't, get the
         // three values you saved and restore them: revenue, desserts sold and the timer's
         // seconds count. Also make sure to show the correct image resource.
+        if (savedInstanceState != null) {
+            val reStoreData: ArrayList<Int> = savedInstanceState.getIntegerArrayList(KEY_SAVEDATA) as ArrayList<Int>
+            revenue = reStoreData.get(0)
+            dessertsSold = reStoreData.get(1)
+            dessertTimer.secondsCount = reStoreData.get(2)
+        }
 
         // Set the TextViews to the right values
         binding.revenue = revenue
@@ -158,8 +168,22 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
     }
 
     // TODO (01) Add lifecycle callback methods for onSaveInstanceState and onRestoreInstanceState
-    // TODO (02) In onSaveInstanceState, put the revenue, dessertsSold and
-    // dessertTimer.secondsCount in the state Bundle
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        // TODO (02) In onSaveInstanceState, put the revenue, dessertsSold and
+        // dessertTimer.secondsCount in the state Bundle
+
+        Timber.i("onSaveInstanceState Called")
+        var saveList = arrayListOf<Int>(revenue, dessertsSold, dessertTimer.secondsCount)
+        outState.putIntegerArrayList(KEY_SAVEDATA, saveList)
+
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        Timber.i("onRestoreInstanceState Called")
+    }
 
     /** Lifecycle Methods **/
     override fun onStart() {

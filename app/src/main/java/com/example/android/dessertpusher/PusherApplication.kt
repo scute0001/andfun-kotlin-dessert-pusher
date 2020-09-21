@@ -16,6 +16,14 @@
 
 package com.example.android.dessertpusher
 
+import android.app.Application
+import timber.log.Timber
 
-// TODO (02) Copy over the Application class, called PusherApplication, from the course
-// TODO (04) In the PusherApplication class, initialize Timber by planting a Tree
+// TODO (02)(Step2) Copy over the Application class, called PusherApplication, from the course
+class PusherApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        // TODO (04)(Step2) In the PusherApplication class, initialize Timber by planting a Tree
+        Timber.plant(Timber.DebugTree())
+    }
+}

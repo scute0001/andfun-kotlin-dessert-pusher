@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        Log.i("MainActivity", "onCreate Called")
-        Timber.i("OnCreate Called form Timber.")
+        Timber.i("OnCreate Called from Timber.")
 
         // Use Data Binding to get reference to the views
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -158,7 +158,31 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
         // TODO (05) Here, override the rest of the lifecycle methods and use Timber to print
         // log statements. Don't forget to update the log statement in onCreate!
 //        Log.i("MainActivity", "onStart Called")
-        Timber.i("OnStart called form timber.")
+        Timber.i("OnStart called from timber.")
     }
 
+    override fun onResume() {
+        super.onResume()
+        Timber.i("OnResume called from timber")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Timber.i("OnPause called from timber")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Timber.i("OnDestroy called from timber")
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        Timber.i("OnRestart called from timber")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Timber.i("OnStop called from timber")
+    }
 }

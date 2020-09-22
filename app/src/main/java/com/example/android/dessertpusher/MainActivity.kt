@@ -34,6 +34,13 @@ import java.util.ArrayList
 const val KEY_REVENUE = "revenue_key"
 const val KEY_DESSERT_SOLD = "dessert_sold_key"
 const val KEY_TIMER_SECONDS = "timer_seconds_key"
+const val KEY_SAVED = "key_saved"
+
+enum class SaveData(val value: Int){
+    REVENUE(0),
+    DESSERT_SOLD(1),
+    TIMER_SECONDS(2)
+}
 
 class MainActivity : AppCompatActivity(), LifecycleObserver {
 
@@ -85,14 +92,21 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
         // Setup dessertTimer, passing in the lifecycle
         dessertTimer = DessertTimer(this.lifecycle)
 
-        // TODO (03) Check here if the Bundle savedInstanceState is null. If it isn't, get the
+        // TODO (03)(Step5) Check here if the Bundle savedInstanceState is null. If it isn't, get the
         // three values you saved and restore them: revenue, desserts sold and the timer's
         // seconds count. Also make sure to show the correct image resource.
+
         if (savedInstanceState != null) {
             // Get all the game state information from the bundle, set it
-            revenue = savedInstanceState.getInt(KEY_REVENUE, 0)
-            dessertsSold = savedInstanceState.getInt(KEY_DESSERT_SOLD, 0)
-            dessertTimer.secondsCount = savedInstanceState.getInt(KEY_TIMER_SECONDS, 0)
+
+//            revenue = savedInstanceState.getInt(KEY_REVENUE, 0)
+//            dessertsSold = savedInstanceState.getInt(KEY_DESSERT_SOLD, 0)
+//            dessertTimer.secondsCount = savedInstanceState.getInt(KEY_TIMER_SECONDS, 0)
+            savedInstanceState.getIntArray(KEY_SAVED)?.let {
+                revenue = it.get(SaveData.REVENUE.value)
+                dessertsSold = it.get(SaveData.DESSERT_SOLD.value)
+                dessertTimer.secondsCount = it.get(SaveData.TIMER_SECONDS.value)
+            }
             showCurrentDessert()
 
         }
@@ -172,20 +186,19 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
         return super.onOptionsItemSelected(item)
     }
 
-    // TODO (01) Add lifecycle callback methods for onSaveInstanceState and onRestoreInstanceState
+    // TODO (01)(Step5) Add lifecycle callback methods for onSaveInstanceState and onRestoreInstanceState
 
-/*    override fun onSaveInstanceState(outState: Bundle) {
-        // TODO (02) In onSaveInstanceState, put the revenue, dessertsSold and
+    override fun onSaveInstanceState(outState: Bundle) {
+        // TODO (02)(Step5) In onSaveInstanceState, put the revenue, dessertsSold and
         // dessertTimer.secondsCount in the state Bundle
 
         Timber.i("onSaveInstanceState Called")
-        var saveList = arrayListOf<Int>(revenue, dessertsSold, dessertTimer.secondsCount)
-        outState.putIntegerArrayList(KEY_SAVEDATA, saveList)
-
+        var saveList = intArrayOf(revenue, dessertsSold, dessertTimer.secondsCount)
+        outState.putIntArray(KEY_SAVED, saveList)
         super.onSaveInstanceState(outState)
-    }*/
+    }
 
-
+/*
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putInt(KEY_REVENUE, revenue)
         outState.putInt(KEY_DESSERT_SOLD, dessertsSold)
@@ -193,6 +206,7 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
         Timber.i("onSaveInstanceState Called")
         super.onSaveInstanceState(outState)
     }
+*/
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
